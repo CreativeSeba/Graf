@@ -10,10 +10,12 @@ public class Main {
         Node node4 = graph.add_node("Node 4");
 
         graph.add_edge(1, node1.id, node2.id);
-        graph.add_edge(2, node2.id, node3.id);
+        graph.add_edge(4, node2.id, node3.id);
         graph.add_edge(3, node1.id, node3.id);
         graph.add_edge(4, node3.id, node4.id);
+        graph.add_edge(3, node1.id, node2.id);
 
-        graph.findRoad(1, 2);
+        graph.print_graph();
+        graph.findRoad(node1.id, node4.id);
     }
 }
