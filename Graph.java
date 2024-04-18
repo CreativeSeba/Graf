@@ -90,25 +90,43 @@ public class Graph {
         if(edges.isEmpty()){
             System.out.println("Zbiór wierzchołków jest pusty");
         }
-        else{
+        else {
             ArrayList<Node> Q = nodes;
             ArrayList<Edge> vEdges = new ArrayList<>();
             HashMap<Node, Integer> vMap = new HashMap<>();
-            for(Node node : nodes){
-                if(node.id==id1){
-                    Q.remove(node);
-                    break;
+            while (true) {
+
+                for (Node node : nodes) {
+                    if (node.id == id1) {
+                        Q.remove(node);
+                        break;
+                    }
+                }
+                for (Edge edge : edges) {
+                    if (edge.id1 == id1 || edge.id2 == id2) {
+                        vEdges.add(edge);
+                    }
+                }
+                Node vNode;
+                Edge shortesWay = vEdges.get(0);
+                for (Edge edge : vEdges) {
+                    for (Node node : nodes) {
+                        if (edge.id1 == node.id || edge.id1 == node.id) {
+                            vMap.put(node, edge.weight++);
+                        }
+                    }
+                    if (edge.weight < shortesWay.weight) {
+                        shortesWay = edge;
+                    }
+                }
+                for (Node node : nodes) {
+                    if (shortesWay.id1 == node.id || shortesWay.id2 == node.id) {
+                        vNode = node;
+                        Q.remove(vNode);
+                        break;
+                    }
                 }
             }
-            for(Edge edge : edges){
-                if(edge.id1 == id1 || edge.id2 == id2){
-                    vEdges.add(edge);
-                }
-            }
-            
         }
-    }
-    private void shortestWay(){
-        
     }
 }
