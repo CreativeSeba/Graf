@@ -1,13 +1,12 @@
 package pack;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Graph {
     ArrayList<Node> nodes = new ArrayList<>();
     ArrayList<Edge> edges = new ArrayList<>();
 
-    public void print_graph() {
+    public void printGraph() {
         for (Node node : nodes) {
             System.out.println("\nNode id: " + node.id+" | Node name: "+node.name+"\nEdges: ");
             for (Edge edge : edges){
@@ -20,14 +19,14 @@ public class Graph {
         }
     }
 
-    public Node add_node(String name) {
+    public Node addNode(String name) {
         Node node = new Node(name);
         nodes.add(node);
         return node;
     }
 
 
-    public Node remove_node(int id) {
+    public Node removeNode(int id) {
         if (nodes.size() == 0) {
             System.out.println("No nodes to remove");
         }
@@ -49,7 +48,7 @@ public class Graph {
     }
 
 
-    public Edge add_edge(int weight, int id1, int id2) {
+    public Edge addEdge(int weight, int id1, int id2) {
         boolean node1Exists = false;
         boolean node2Exists = false;
 
@@ -70,7 +69,7 @@ public class Graph {
         }
         return null;
     }
-    public Edge remove_edge(int id1, int id2){
+    public Edge removeEdge(int id1, int id2){
         Edge edgeToRemove = null;
 
         for(Edge edge : edges){
@@ -88,7 +87,7 @@ public class Graph {
         }
         return null;
     }
-    public int find_road(int id1, int id2) {
+    public int findRoad(int id1, int id2) {
         if (edges.isEmpty()) {
             System.out.println("Set of nodes is empty");
         } else {
@@ -156,5 +155,22 @@ public class Graph {
         }
         return null;
     }
-
+    public void algorytmKruskala(){
+        ArrayList<Edge> notSortedEdges = new ArrayList<>(edges);
+        ArrayList<Edge> sortedEdges = new ArrayList<>();
+        ArrayList<Edge> withoutCycles = new ArrayList<>();
+        int weight = Integer.MAX_VALUE;
+        if(!edges.isEmpty()){
+            weight = 0;
+        }
+        for(Edge edge : edges){
+            if(edge.weight>weight){
+                sortedEdges.add(edge);
+                weight = edge.weight;
+            }
+        }
+        for(Edge edge : sortedEdges){
+            System.out.println(edge.weight);
+        }
+    }
 }
