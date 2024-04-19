@@ -1,6 +1,8 @@
 package pack;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
 public class Graph {
     ArrayList<Node> nodes = new ArrayList<>();
     ArrayList<Edge> edges = new ArrayList<>();
@@ -86,47 +88,73 @@ public class Graph {
         }
         return null;
     }
-    public void find_road(int id1, int id2){
-        if(edges.isEmpty()){
-            System.out.println("Zbiór wierzchołków jest pusty");
-        }
-        else {
-            ArrayList<Node> Q = nodes;
-            ArrayList<Edge> vEdges = new ArrayList<>();
-            HashMap<Node, Integer> vMap = new HashMap<>();
-            while (true) {
+    public int find_road(int id1, int id2) {
+        if (edges.isEmpty()) {
+            System.out.println("Set of nodes is empty");
+        } else {
+            Node sourceNode = null;
+            Node destinationNode = null;
+            for (Node node : nodes) {
+                if (node.id == id1) {
+                    sourceNode = node;
+                }
+                if (node.id == id2) {
+                    destinationNode = node;
+                }
+                if (sourceNode != null && destinationNode != null) {
+                    break;
+                }
+            }
 
-                for (Node node : nodes) {
-                    if (node.id == id1) {
-                        Q.remove(node);
-                        break;
+            HashMap<Node, Integer> distance = new HashMap<>();
+            HashMap<Node, Node> predecessor = new HashMap<>();
+            ArrayList<Node> Q = new ArrayList<>();
+
+            for (Node node : nodes) {
+                distance.put(node, Integer.MAX_VALUE);
+                predecessor.put(node, null);
+                Q.add(node);
+            }
+
+            distance.put(sourceNode, 0);
+
+            while (!Q.isEmpty()) {
+                Node u = null;
+                int minDistance = Integer.MAX_VALUE;
+                for (Node node : Q) {
+                    if (distance.get(node) < minDistance) {
+                        u = node;
+                        minDistance = distance.get(node);
                     }
                 }
+
+                Q.remove(u);
+
                 for (Edge edge : edges) {
-                    if (edge.id1 == id1 || edge.id2 == id2) {
-                        vEdges.add(edge);
-                    }
-                }
-                Node vNode;
-                Edge shortesWay = vEdges.get(0);
-                for (Edge edge : vEdges) {
-                    for (Node node : nodes) {
-                        if (edge.id1 == node.id || edge.id1 == node.id) {
-                            vMap.put(node, edge.weight++);
+                    if (edge.id1 == u.id || edge.id2 == u.id) {
+                        Node v = edge.id1 == u.id ? getNodeById(edge.id2) : getNodeById(edge.id1);
+                        int alt = distance.get(u) + edge.weight;
+                        if (alt < distance.get(v)) {
+                            distance.put(v, alt);
+                            predecessor.put(v, u);
                         }
-                    }
-                    if (edge.weight < shortesWay.weight) {
-                        shortesWay = edge;
-                    }
-                }
-                for (Node node : nodes) {
-                    if (shortesWay.id1 == node.id || shortesWay.id2 == node.id) {
-                        vNode = node;
-                        Q.remove(vNode);
-                        break;
                     }
                 }
             }
+
+            int pathLength = distance.get(destinationNode);
+            System.out.println("\nShortest path length from node " + id1 + " to node " + id2 + ": " + pathLength);
+            return pathLength;
         }
+        return 0;
     }
+    private Node getNodeById(int id) {
+        for (Node node : nodes) {
+            if (node.id == id) {
+                return node;
+            }
+        }
+        return null;
+    }
+
 }
