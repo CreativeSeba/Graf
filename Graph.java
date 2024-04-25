@@ -24,7 +24,7 @@ public class Graph {
 
 
     public Node removeNode(int id) {
-        if (nodes.size() == 0) {
+        if (nodes.isEmpty()) {
             System.out.println("No nodes to remove");
         }
         ArrayList<Edge> edgesToRemove = new ArrayList<>();
@@ -131,29 +131,84 @@ public class Graph {
         return nodeDistance.get(id2);
     }
 
-    public void algorytmKruskala(){
-        HashSet<Integer> uniqueWeights = new HashSet<>();
+    public void algorytmKruskala() {
         ArrayList<Edge> sortedEdges = new ArrayList<>();
-        for(Edge edge : edges){
-            uniqueWeights.add(edge.weight);
-        }
-        for(int i : uniqueWeights){
-              for(Edge edge : edges){
-                  if(edge.weight==i){
-                      for(Edge edge2 : sortedEdges){
-                          if(edge.id1==edge2.id1||edge.id1==edge2.id2||edge.id2==edge2.id1||edge.id2==edge2.id2){
-                              System.out.println(edge2.id1 + "  " + edge2.id2 + " created a cycle");
-                              break;
-                          }
-                      }
-                      sortedEdges.add(edge);
-                      break;
-                  }
-              }
+        LinkedHashMap<Edge, ArrayList<Node>> minimalneDrzewo = new LinkedHashMap<>();
+        for (Edge edge : edges) {
+            sortedEdges.add(edge);
         }
         Collections.sort(sortedEdges, Comparator.comparingInt(edge -> edge.weight));
-        for(Edge edge : sortedEdges){
-            System.out.println(edge.weight);
+        for (Edge edge : sortedEdges) {
+            ArrayList<Node> nodeList = new ArrayList<>();
+            if (minimalneDrzewo.isEmpty()) {
+                for (Node node : nodes) {
+                    if (node.id == edge.id1) {
+                        nodeList.add(node);
+                    } else if (node.id == edge.id2) {
+                        nodeList.add(node);
+                    }
+                }
+                minimalneDrzewo.put(edge, nodeList);
+            } else {
+                for (Node node : nodes) {
+                    if (node.id == edge.id1) {
+                        nodeList.add(node);
+                    } else if (node.id == edge.id2) {
+                        nodeList.add(node);
+                    }
+                }
+                minimalneDrzewo.put(edge, nodeList);
+//                boolean node1exists = false;
+//                boolean node2exists = false;
+//                for (Map.Entry<Edge, ArrayList<Node>> entry : minimalneDrzewo.entrySet()) {
+//                    ArrayList<Node> value = entry.getValue();
+//                    if (nodeList.size() > 0 && value.get(0) == nodeList.get(0)) {
+//                        nodeList.remove(value.get(0));
+//                        node1exists = true;
+//                    }
+//                    else if (nodeList.size() > 1 && value.get(0).id == nodeList.get(0).id) {
+//                        nodeList.remove(value.get(0));
+//                        node2exists = true;
+//                    }
+//
+//                }
+//                if((node1exists&&!node2exists)||(!node1exists&&node2exists)){
+//                    minimalneDrzewo.put(edge, nodeList);
+//                }
+//                else if(node1exists&&node2exists){
+//                    System.out.println("Cycle!");
+//                }
+//            }
+            }
+        }
+        // Create a collection to store edges to remove
+        ArrayList<Edge> edgesToRemove = new ArrayList<>();
+
+        for (Map.Entry<Edge, ArrayList<Node>> entry : minimalneDrzewo.entrySet()) {
+            Edge currentEdge = entry.getKey();
+            boolean node1exists = false;
+            boolean node2exists = false;
+            for (Map.Entry<Edge, ArrayList<Node>> entry1 : minimalneDrzewo.entrySet()) {
+                if (currentEdge.id1 == entry1.getValue().get(0).id) {
+                    node1exists = true;
+                } else if (currentEdge.id2== entry1.getValue().get(0).id) {
+                    node2exists = true;
+                }
+            }
+            if (node1exists && node2exists) {
+                edgesToRemove.add(currentEdge); // Add the edge to remove later
+            }
+        }
+
+// Remove the edges after the loop completes
+        for (Edge edge : edgesToRemove) {
+            minimalneDrzewo.remove(edge);
+        }
+
+        for (Map.Entry<Edge, ArrayList<Node>> entry : minimalneDrzewo.entrySet()) {
+                ArrayList <Node> value = entry.getValue();
+                Edge key = entry.getKey();
+                System.out.println("Key: " + key.weight + ", Value: " + value.get(0).id);
         }
     }
 }
