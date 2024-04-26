@@ -21,9 +21,9 @@ public class Main {
         graph.addEdge(5, node1.id, node4.id);
         graph.addEdge(5, node5.id, node6.id);
 
-
         graph.printGraph();
         graph.findRoad(node3.id, node4.id);
         graph.algorytmKruskala();
+        graph.algorytmPrima();
     }
 }
